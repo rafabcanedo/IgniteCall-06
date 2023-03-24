@@ -9,14 +9,14 @@ import { DefaultSeo } from 'next-seo'
 
 globalStyles()
 
-export default function App({ 
+export default function App({
   Component,
-  pageProps: { session, ...pageProps }
- }: AppProps) {
+  pageProps: { session, ...pageProps },
+}: AppProps) {
   return (
-   <QueryClientProvider client={queryClient}>
-    <SessionProvider session={session}>
-    <DefaultSeo
+    <QueryClientProvider client={queryClient}>
+      <SessionProvider session={session}>
+        <DefaultSeo
           openGraph={{
             type: 'website',
             locale: 'pt_BR',
@@ -25,8 +25,8 @@ export default function App({
           }}
         />
 
-      <Component {...pageProps} />
-    </SessionProvider>
-   </QueryClientProvider>
+        <Component {...pageProps} />
+      </SessionProvider>
+    </QueryClientProvider>
   )
 }

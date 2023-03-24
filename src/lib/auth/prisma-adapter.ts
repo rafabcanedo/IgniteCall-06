@@ -90,8 +90,8 @@ export function PrismaAdapter(
           },
         },
         include: {
-         user: true,
-        }
+          user: true,
+        },
       })
 
       if (!account) {
@@ -112,14 +112,14 @@ export function PrismaAdapter(
 
     async updateUser(user) {
       const prismaUser = await prisma.user.update({
-       where: {
-        id: user.id!,
-       },
-       data: {
-        name: user.name,
-        email: user.email,
-        avatar_url: user.avatar_url,
-       },
+        where: {
+          id: user.id!,
+        },
+        data: {
+          name: user.name,
+          email: user.email,
+          avatar_url: user.avatar_url,
+        },
       })
 
       return {
@@ -146,7 +146,7 @@ export function PrismaAdapter(
           scope: account.scope,
           id_token: account.id_token,
           session_state: account.session_state,
-        }
+        },
       })
     },
 
@@ -189,32 +189,32 @@ export function PrismaAdapter(
           sessionToken: session.session_token,
         },
         user: {
-        id: user.id,
-        name: user.name,
-        username: user.username,
-        email: user.email!,
-        emailVerified: null,
-        avatar_url: user.avatar_url!,
-        }
+          id: user.id,
+          name: user.name,
+          username: user.username,
+          email: user.email!,
+          emailVerified: null,
+          avatar_url: user.avatar_url!,
+        },
       }
     },
 
     async updateSession({ sessionToken, userId, expires }) {
       const prismaSession = await prisma.session.update({
         where: {
-         session_token: sessionToken,
+          session_token: sessionToken,
         },
         data: {
-         expires,
-         user_id: userId,
+          expires,
+          user_id: userId,
         },
-       })
- 
-       return {
-         sessionToken: prismaSession.session_token,
-         userId: prismaSession.user_id,
-         expires: prismaSession.expires,
-       }
+      })
+
+      return {
+        sessionToken: prismaSession.session_token,
+        userId: prismaSession.user_id,
+        expires: prismaSession.expires,
+      }
     },
 
     async deleteSession(sessionToken) {

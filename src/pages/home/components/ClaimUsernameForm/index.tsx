@@ -7,48 +7,57 @@ import { useRouter } from 'next/router'
 
 import { ArrowRight } from 'phosphor-react'
 
- const ClaimUsernameFormSchema = z.object({
+const ClaimUsernameFormSchema = z.object({
   username: z
-  .string()
-  .min(3, { message: 'O usuário precisa ter pelo menos 3 letras.' })
-  .regex(/^([a-z\\-]+)$/i, {
-    message: 'O usuário pode ter apenas letras e hifens.',
-  })
-  .transform((username) => username.toLowerCase()),
-  })
-  
- type ClaimUsernameFormData = z.infer<typeof ClaimUsernameFormSchema>
+    .string()
+    .min(3, { message: 'O usuário precisa ter pelo menos 3 letras.' })
+    .regex(/^([a-z\\-]+)$/i, {
+      message: 'O usuário pode ter apenas letras e hifens.',
+    })
+    .transform((username) => username.toLowerCase()),
+})
+
+type ClaimUsernameFormData = z.infer<typeof ClaimUsernameFormSchema>
 
 export function ClaimUsernameForm() {
+  const {
+    register,
+    handleSubmit,
+    formState: { errors, isSubmitting },
+  } = useForm<ClaimUsernameFormData>({
+    resolver: zodResolver(ClaimUsernameFormSchema),
+  })
 
- const { register, handleSubmit, formState: { errors, isSubmitting } } = useForm<ClaimUsernameFormData>({
-  resolver: zodResolver(ClaimUsernameFormSchema),
- })
+  const router = useRouter()
 
- const router = useRouter()
+  async function handleClaimUsername(data: ClaimUsernameFormData) {
+    const { username } = data
 
- async function handleClaimUsername(data: ClaimUsernameFormData) {
-   const { username } = data
-
-   await router.push(`/register?username=${username}`)
+    await router.push(`/register?username=${username}`)
   }
 
   return (
-   <>
-    <Form as="form" onSubmit={handleSubmit(handleClaimUsername)}>
-      <TextInput size="sm" prefix="ignite.com/" placeholder="seu-usuário" {...register('username')} />
-      <Button size="sm" type="submit" disabled={isSubmitting}>
-        Reservar
-        <ArrowRight />
-      </Button>
-    </Form>
+    <>
+      <Form as="form" onSubmit={handleSubmit(handleClaimUsername)}>
+        <TextInput
+          size="sm"
+          prefix="ignite.com/"
+          placeholder="seu-usuário"
+          {...register('username')}
+        />
+        <Button size="sm" type="submit" disabled={isSubmitting}>
+          Reservar
+          <ArrowRight />
+        </Button>
+      </Form>
 
       <FormAnnotation>
         <Text size="sm">
-         {errors.username ? errors.username.message : 'Digite o nome do usuário desejado!'}
+          {errors.username
+            ? errors.username.message
+            : 'Digite o nome do usuário desejado!'}
         </Text>
       </FormAnnotation>
-
-  </>  
+    </>
   )
 }

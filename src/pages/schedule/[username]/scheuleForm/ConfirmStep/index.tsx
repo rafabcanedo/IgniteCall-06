@@ -1,91 +1,100 @@
-import { ConfirmForm, FormActions, FormHeader, FormError } from "./styles";
-import { zodResolver } from "@hookform/resolvers/zod";
-import { Button, Text, TextArea, TextInput } from "@ignite-ui/react";
-import { useForm } from 'react-hook-form';
-import { z } from "zod";
-import { CalendarBlank, Clock } from "phosphor-react";
-import dayjs from "dayjs";
-import { useRouter } from "next/router";
-import { api } from "../../../../../lib/axios";
+import { ConfirmForm, FormActions, FormHeader, FormError } from './styles'
+import { zodResolver } from '@hookform/resolvers/zod'
+import { Button, Text, TextArea, TextInput } from '@ignite-ui/react'
+import { useForm } from 'react-hook-form'
+import { z } from 'zod'
+import { CalendarBlank, Clock } from 'phosphor-react'
+import dayjs from 'dayjs'
+import { useRouter } from 'next/router'
+import { api } from '../../../../../lib/axios'
 
 const confirmeformSchema = z.object({
- name: z.string().min(3, { message: 'O nome precisa no mínimo 3 caracteres' }),
- email: z.string().email().email({ message: 'Digite um e-mail válido' }),
- observations: z.string().nullable(),
+  name: z.string().min(3, { message: 'O nome precisa no mínimo 3 caracteres' }),
+  email: z.string().email().email({ message: 'Digite um e-mail válido' }),
+  observations: z.string().nullable(),
 })
 
 type ConfirmFormData = z.infer<typeof confirmeformSchema>
 
 interface ConfirmStepProps {
-    schedulingDate: Date
-    onCancelConfirmation: () => void
+  schedulingDate: Date
+  onCancelConfirmation: () => void
 }
 
 export function ConfirmStep({
-    schedulingDate,
-    onCancelConfirmation,
-  }: ConfirmStepProps) {
- const {
-  register,
-  handleSubmit,
-  formState: {isSubmitting, errors },
- } = useForm<ConfirmFormData>({
-  resolver: zodResolver(confirmeformSchema),
- })
-
- const router = useRouter()
- const username = String(router.query.username)
-
- async function handleConfirmScheduling(data: ConfirmFormData) {
-  const { name, email, observations } = data
-  await api.post(`/users/${username}/schedule`, {
-   name,
-   email,
-   observations,
-   date: schedulingDate,
+  schedulingDate,
+  onCancelConfirmation,
+}: ConfirmStepProps) {
+  const {
+    register,
+    handleSubmit,
+    formState: { isSubmitting, errors },
+  } = useForm<ConfirmFormData>({
+    resolver: zodResolver(confirmeformSchema),
   })
 
-  onCancelConfirmation()
- }
+  const router = useRouter()
+  const username = String(router.query.username)
 
- const describedDate = dayjs(schedulingDate).format('DD[ de ]MMMM[ de ]YYYY')
- const describedTime = dayjs(schedulingDate).format('HH:mm[h]')
+  async function handleConfirmScheduling(data: ConfirmFormData) {
+    const { name, email, observations } = data
+    await api.post(`/users/${username}/schedule`, {
+      name,
+      email,
+      observations,
+      date: schedulingDate,
+    })
 
- return (
-  <ConfirmForm as="form" onSubmit={handleSubmit(handleConfirmScheduling)}>
-   <FormHeader>
-    <Text>
-     <CalendarBlank />
-     {describedDate}
-    </Text>
-    <Text>
-     <Clock />
-     {describedTime}
-    </Text>
-   </FormHeader>
+    onCancelConfirmation()
+  }
 
-   <label>
-    <Text size="sm">Nome Completo</Text>
-    <TextInput placeholder="Seu Nome" {...register('name')} />
-    {errors.name && <FormError size="sm">{errors.name.message}</FormError>}
-   </label>
+  const describedDate = dayjs(schedulingDate).format('DD[ de ]MMMM[ de ]YYYY')
+  const describedTime = dayjs(schedulingDate).format('HH:mm[h]')
 
-   <label>
-    <Text size="sm">Endereço de Email</Text>
-    <TextInput type="email" placeholder="joaomaria@example.com" {...register('email')} />
-    {errors.email && <FormError size="sm">{errors.email.message}</FormError>}
-   </label>
+  return (
+    <ConfirmForm as="form" onSubmit={handleSubmit(handleConfirmScheduling)}>
+      <FormHeader>
+        <Text>
+          <CalendarBlank />
+          {describedDate}
+        </Text>
+        <Text>
+          <Clock />
+          {describedTime}
+        </Text>
+      </FormHeader>
 
-   <label>
-    <Text size="sm">Observações</Text>
-    <TextArea {...register('observations')} />
-   </label>
+      <label>
+        <Text size="sm">Nome Completo</Text>
+        <TextInput placeholder="Seu Nome" {...register('name')} />
+        {errors.name && <FormError size="sm">{errors.name.message}</FormError>}
+      </label>
 
-   <FormActions>
-    <Button type="button" variant="tertiary" onClick={onCancelConfirmation}>Cancelar</Button>
-    <Button type="submit" disabled={isSubmitting}>Confirmar</Button>
+      <label>
+        <Text size="sm">Endereço de Email</Text>
+        <TextInput
+          type="email"
+          placeholder="joaomaria@example.com"
+          {...register('email')}
+        />
+        {errors.email && (
+          <FormError size="sm">{errors.email.message}</FormError>
+        )}
+      </label>
 
-   </FormActions>
-  </ConfirmForm>
- )
+      <label>
+        <Text size="sm">Observações</Text>
+        <TextArea {...register('observations')} />
+      </label>
+
+      <FormActions>
+        <Button type="button" variant="tertiary" onClick={onCancelConfirmation}>
+          Cancelar
+        </Button>
+        <Button type="submit" disabled={isSubmitting}>
+          Confirmar
+        </Button>
+      </FormActions>
+    </ConfirmForm>
+  )
 }

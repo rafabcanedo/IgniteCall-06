@@ -2,7 +2,10 @@ import type { NextApiRequest, NextApiResponse } from 'next'
 import { prisma } from '../../../lib/prisma'
 import { setCookie } from 'nookies'
 
-export default async function handler(req: NextApiRequest, res: NextApiResponse,) {
+export default async function handler(
+  req: NextApiRequest,
+  res: NextApiResponse,
+) {
   if (req.method !== 'POST') {
     return res.status(405).end()
   }
@@ -29,9 +32,9 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse,
   })
 
   setCookie({ res }, '@ignitecall:userId', user.id, {
-   maxAge: 60 * 60 * 24 * 7, // 7 Days
-   path: '/',
+    maxAge: 60 * 60 * 24 * 7, // 7 Days
+    path: '/',
   })
 
- return res.status(200).json(req.body)
+  return res.status(200).json(req.body)
 }
