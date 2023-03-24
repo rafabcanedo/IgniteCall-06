@@ -8,6 +8,7 @@ import { useRouter } from 'next/router'
 import { z } from 'zod'
 import { zodResolver } from '@hookform/resolvers/zod'
 import { api } from '../../../lib/axios'
+import { NextSeo } from 'next-seo'
 
 import { ArrowRight } from 'phosphor-react'
 
@@ -94,6 +95,8 @@ export default function TimeInterval() {
   }
 
   return (
+  <>
+   <NextSeo title="Selecione sua disponibilidade | Ignite Call" noindex />
     <Container>
       <Header>
         <Heading as="strong">Quase lá</Heading>
@@ -157,5 +160,6 @@ export default function TimeInterval() {
        </Button>
       </IntervalBox>
     </Container>
+    </>
   )
 }

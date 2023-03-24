@@ -10,6 +10,7 @@ import { zodResolver } from '@hookform/resolvers/zod'
 import { buildNextAuthOptions } from '../../api/auth/[...nextauth].api'
 import { api } from '../../../lib/axios'
 import { z } from 'zod'
+import { NextSeo } from 'next-seo'
 
 import { ArrowRight } from 'phosphor-react'
 
@@ -40,6 +41,8 @@ export default function UpdateProfile() {
  }
 
  return (
+ <>
+ <NextSeo title="Atualize seu perfil | Ignite Call" noindex />
   <Container>
     <Header>
         <Heading as="strong">Bem-vindo ao Ignite Call!</Heading>
@@ -75,6 +78,7 @@ export default function UpdateProfile() {
         </Button>
       </ProfileBox>
   </Container>
+  </>
  )
 }
 
