@@ -4,6 +4,7 @@ import { Button, Text, TextArea, TextInput } from "@ignite-ui/react";
 import { useForm } from 'react-hook-form';
 import { z } from "zod";
 import { CalendarBlank, Clock } from "phosphor-react";
+import dayjs from "dayjs";
 
 const confirmeformSchema = z.object({
  name: z.string().min(3, { message: 'O nome precisa no mínimo 3 caracteres' }),
@@ -13,7 +14,15 @@ const confirmeformSchema = z.object({
 
 type ConfirmFormData = z.infer<typeof confirmeformSchema>
 
-export function ConfirmStep() {
+interface ConfirmStepProps {
+    schedulingDate: Date
+    onCancelConfirmation: () => void
+}
+
+export function ConfirmStep({
+    schedulingDate,
+    onCancelConfirmation,
+  }: ConfirmStepProps) {
  const {
   register,
   handleSubmit,
@@ -25,16 +34,20 @@ export function ConfirmStep() {
  function handleConfirmScheduling(data: ConfirmFormData) {
   console.log(data)
  }
+
+ const describedDate = dayjs(schedulingDate).format('DD[ de ]MMMM[ de ]YYYY')
+ const describedTime = dayjs(schedulingDate).format('HH:mm[h]')
+
  return (
   <ConfirmForm as="form" onSubmit={handleSubmit(handleConfirmScheduling)}>
    <FormHeader>
     <Text>
      <CalendarBlank />
-     20 de Março de 2023
+     {describedDate}
     </Text>
     <Text>
      <Clock />
-     18:00h
+     {describedTime}
     </Text>
    </FormHeader>
 
@@ -56,7 +69,7 @@ export function ConfirmStep() {
    </label>
 
    <FormActions>
-    <Button type="button" variant="tertiary">Cancelar</Button>
+    <Button type="button" variant="tertiary" onClick={onCancelConfirmation}>Cancelar</Button>
     <Button type="submit" disabled={isSubmitting}>Confirmar</Button>
 
    </FormActions>
